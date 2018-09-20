@@ -14,12 +14,10 @@ __version__ = "0.1"
 
 import hashlib
 import string
-# from time import sleep#DEBUGGING
-
-#EXTRA just getting nicer:
+# from time import sleep #DEBUGGING
 import argparse
-import signal
-import sys
+import signal #EXTRA(just better looking)
+import sys #EXTRA(just better looking)
 
 def md5(var):
 	return hashlib.md5(var.encode('utf-8')).hexdigest()
@@ -36,9 +34,9 @@ def check(var,hash):
 
 def force(hash):
 	pos=0
-	# short=0.001#DEBUGGING
-	# long=1#DEBUGGING
-	# slower=100#DEBUGGING
+	# short=0.001 #DEBUGGING
+	# long=1 #DEBUGGING
+	# slower=100 #DEBUGGING
 	while check(x,hash):
 		x[pos] = chars[ (chars.index(x[pos])+1) % len(chars) ]
 		if x[pos]=='a': #iterated through all chars in this position
@@ -46,8 +44,8 @@ def force(hash):
 				x[pos+1] = chars[ (chars.index(x[pos+1])+1) % len(chars) ]
 				if x[pos+1]=='a':
 					x.append('a')
-					# sleep(long)#DEBUGGING
-					# short=short*slower#DEBUGGING
+					# sleep(long) #DEBUGGING
+					# short=short*slower #DEBUGGING
 			else:
 				pos+=1
 				x.append('a')
@@ -55,16 +53,13 @@ def force(hash):
 		# sleep(short)#DEBUGGING
 	print('finished without success..')
 
-#EXTRA just getting nicer:
-def bye(signal, frame):
-	#this function is a handler for SIGINT
+def bye(signal, frame):	#this function is a handler for SIGINT
 	print("\nbye!")
 	sys.exit(0)
 
 if __name__ == '__main__':
 
-	#EXTRA just getting nicer:
-	signal.signal(signal.SIGINT, bye)
+	signal.signal(signal.SIGINT, bye) #EXTRA(just better looking)
 
 	parser = argparse.ArgumentParser(description="just brute-forcing md5,\
 	 v%s by @jartigag" % __version__)
