@@ -30,8 +30,10 @@ def increment(var):
 def md5(var):
 	return hashlib.md5(var.encode('utf-8')).hexdigest()
 
-def check(var,hash,verbose,reallyVerbose):
+def check(var,hash,verbose,reallyVerbose,reverse):
 	flag = 'flag{{{}}}'.format(''.join(var)) # ''.join(var) to get it as string
+	if reverse:
+		flag = 'flag{{{}}}'.format(''.join(reversed(var)))
 	if reallyVerbose:
 		print(flag)
 	elif verbose and ''.join(var)==len(var)*'a': # flag{a},flag{aa},flag{aaa},..
@@ -50,10 +52,14 @@ if __name__ == '__main__':
 
 	signal.signal(signal.SIGINT, bye) #EXTRA(just better looking)
 
-	parser = argparse.ArgumentParser(description="just brute-forcing md5,\
-	 v%s by @jartigag" % __version__)
+	parser = argparse.ArgumentParser(
+		description="just brute-forcing md5 hashes\n\
+from 'flag{xxxxxxx}' strings, by %s" % __author__,
+		formatter_class=argparse.RawTextHelpFormatter)
 	parser.add_argument('hash')
-	parser.add_argument('-m','--maxChars',type=int,default=7)
+	parser.add_argument('-m','--minFlagChars',type=int,default=1)
+	parser.add_argument('-M','--maxFlagChars',type=int,default=7)
+	parser.add_argument('-r','--reversed',action='store_true')
 	parser.add_argument('-v','--verbose',action='store_true')
 	parser.add_argument('-V','--reallyVerbose',action='store_true')
 	args = parser.parse_args()
@@ -70,10 +76,15 @@ if __name__ == '__main__':
 		print('please enter a valid hash (32 hex digits)')
 		sys.exit(0)
 
-	# the real job:
+	# initiate the flag variable:
 	x = []
-	while len(x)<=args.maxChars:
+	if args.minFlagChars>1:
+		x=['a']*args.minFlagChars
+		check(x,args.hash,args.verbose,args.reallyVerbose,args.reversed)
+
+	# the real job:
+	while len(x)<=args.maxFlagChars:
 		x = increment(x)
-		check(x,args.hash,args.verbose,args.reallyVerbose)
-	print('tried until {i} chars and finished without success..'\
-		.format(args.maxChars))
+		check(x,args.hash,args.verbose,args.reallyVerbose,args.reversed)
+	print('tried until {} chars and finished without success..'\
+		.format(args.maxFlagChars))
