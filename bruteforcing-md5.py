@@ -23,8 +23,7 @@ def md5(var):
 	return hashlib.md5(var.encode('utf-8')).hexdigest()
 
 def check(var,hash):
-	flag = 'flag{{{}}}'.format(''.join(var))
-							# ''.join(var) to get it as string
+	flag = 'flag{{{}}}'.format(''.join(var)) # ''.join(var) to get it as string
 	# print(flag)#DEBUGGING
 	if md5(flag)==hash:
 		print('found! the flag is',flag)
