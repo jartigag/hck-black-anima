@@ -22,15 +22,16 @@ import sys #EXTRA(just better looking)
 from multiprocessing import Pool
 from functools import partial
 
-def increment(var):
+def increment(var,numProcs):
+	i=numProcs
 	# this script was really helpful: https://gist.github.com/pazdera/1121315
 	if len(var) <= 0: # increment(var[1:]) -> if len(var[1:]) <= 0
 	#                                         (eventually it's -1)
-		var.append(chars[0])
+		var.append(chars[i-1])
 	else:
-		var[0] = chars[(chars.index(var[0]) + 1) % len(chars)]
-		if chars.index(var[0]) is 0:
-			return list(var[0]) + increment(var[1:])
+		var[0] = chars[(chars.index(var[0]) + i) % len(chars)]
+		if chars.index(var[0]) is i-1:
+			return list(var[0]) + increment(var[1:],numProcs)
 	return var
 
 def md5(var):
@@ -92,18 +93,23 @@ from 'flag{xxxxxxx}' strings, by %s" % __author__,
 
 	if args.parallelProcessing:
 		procs = 3
-		array_x = [x]*procs
+		array_x = []
+		#initiate the flag variables array at sequential values:
+		for p in range(0,procs):
+			array_x.append(increment(x,procs))
 		with Pool(processes=procs) as pool:
 			# the real job:
 			while len(x)<=args.maxFlagChars:
-				array_x = pool.map(increment,array_x)
+				array_x = pool.map(partial(increment,
+					numProcs=procs),array_x)
 				c = [args.hash,args.verbose,args.reallyVerbose,args.reversed]
 				pool.map( partial(check,
 		hash=c[0],verbose=c[1],reallyVerbose=c[2],reverse=c[3]), array_x )
 	else:
+		procs = 1
 		# the real job:
 		while len(x)<=args.maxFlagChars:
-			x = increment(x)
+			x = increment(x,procs)
 			check(x,args.hash,args.verbose,args.reallyVerbose,args.reversed)
 
 	print('tried until {} chars and finished without success..'\
