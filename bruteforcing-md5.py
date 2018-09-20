@@ -6,6 +6,9 @@
 #
 # testing: echo -n "flag{xx}" | md5sum | xargs -tn 1 python3 bruteforcing-md5.py
 
+#WIP: paralellizing with multiprocessing.
+#     at now, it repeats all x numProcs
+
 __author__ = "@jartigag"
 __version__ = "0.1"
 
@@ -15,6 +18,9 @@ import string
 import argparse
 import signal #EXTRA(just better looking)
 import sys #EXTRA(just better looking)
+
+from multiprocessing import Pool
+from functools import partial
 
 def increment(var):
 	# this script was really helpful: https://gist.github.com/pazdera/1121315
@@ -47,6 +53,7 @@ def check(var,hash,verbose,reallyVerbose,reverse):
 def bye(signal, frame):	#this function is a handler for SIGINT
 	print("\nbye!")
 	sys.exit(0)
+	#TODO: finish pool's processes
 
 if __name__ == '__main__':
 
@@ -59,6 +66,7 @@ from 'flag{xxxxxxx}' strings, by %s" % __author__,
 	parser.add_argument('hash')
 	parser.add_argument('-m','--minFlagChars',type=int,default=1)
 	parser.add_argument('-M','--maxFlagChars',type=int,default=7)
+	parser.add_argument('-p','--parallelProcessing',action='store_true')
 	parser.add_argument('-r','--reversed',action='store_true')
 	parser.add_argument('-v','--verbose',action='store_true')
 	parser.add_argument('-V','--reallyVerbose',action='store_true')
@@ -82,9 +90,21 @@ from 'flag{xxxxxxx}' strings, by %s" % __author__,
 		x=['a']*args.minFlagChars
 		check(x,args.hash,args.verbose,args.reallyVerbose,args.reversed)
 
-	# the real job:
-	while len(x)<=args.maxFlagChars:
-		x = increment(x)
-		check(x,args.hash,args.verbose,args.reallyVerbose,args.reversed)
+	if args.parallelProcessing:
+		procs = 3
+		array_x = [x]*procs
+		with Pool(processes=procs) as pool:
+			# the real job:
+			while len(x)<=args.maxFlagChars:
+				array_x = pool.map(increment,array_x)
+				c = [args.hash,args.verbose,args.reallyVerbose,args.reversed]
+				pool.map( partial(check,
+		hash=c[0],verbose=c[1],reallyVerbose=c[2],reverse=c[3]), array_x )
+	else:
+		# the real job:
+		while len(x)<=args.maxFlagChars:
+			x = increment(x)
+			check(x,args.hash,args.verbose,args.reallyVerbose,args.reversed)
+
 	print('tried until {} chars and finished without success..'\
 		.format(args.maxFlagChars))
