@@ -10,8 +10,6 @@ __author__ = "@jartigag"
 __version__ = "0.1"
 
 import hashlib
-import string
-# from time import sleep #DEBUGGING
 import argparse
 import signal #EXTRA(just better looking)
 import sys #EXTRA(just better looking)
@@ -64,7 +62,7 @@ from 'flag{xxxxxxx}' strings, by %s" % __author__,
 	parser.add_argument('-V','--reallyVerbose',action='store_true')
 	args = parser.parse_args()
 
-	chars = string.ascii_letters+string.digits
+	chars = [chr(i) for i in range(ord('0'),ord('z')+1)]
 
 	# validate user input:
 	try:
