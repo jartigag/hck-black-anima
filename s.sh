@@ -39,9 +39,12 @@ then
 
 	if [[ $publickey ]]
 	then
-		echo 'generating a public and private key pair..'
-		echo -e '$ ssh-keygen -t rsa\n'
-		ssh-keygen -t rsa
+		if [[ $genNewKey ]]
+		then
+			echo 'generating a public and private key pair..'
+			echo -e '$ ssh-keygen -t rsa\n'
+			ssh-keygen -t rsa
+		fi
 
 		echo 'configuring ssh authentication with public key for user $user..'
 		echo -e '$ cat ~/.ssh/id_rsa.pub | ssh $user@$host -p $port "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"\n'
