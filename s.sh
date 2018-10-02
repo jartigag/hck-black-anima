@@ -102,13 +102,13 @@ then
     cmd_timeout = 10
     stop_command = /sbin/iptables -D INPUT -s %IP% -p tcp --dport $port -j ACCEPT
 " | sudo tee -a /etc/knockd.conf > /dev/null
-	echo "START_KNOCKD=1" | sudo tee -a /etc/default/knockd > /dev/null
-	sudo service knockd restart
-	echo 'now you must send packets to the sequence ports before ssh login'
-	echo 'e.g.: nc $host 7000; nc $host 8000; nc $host 9000; ssh $user@$host -p $port'
-	# clear all:
-	# sudo iptables -F
-	# sudo rm /etc/knockd.conf /etc/default/knockd
+		echo "START_KNOCKD=1" | sudo tee -a /etc/default/knockd > /dev/null
+		sudo service knockd restart
+		echo 'now you must send packets to the sequence ports before ssh login'
+		echo 'e.g.: nc $host 7000; nc $host 8000; nc $host 9000; ssh $user@$host -p $port'
+		# clear all:
+		# sudo iptables -F
+		# sudo rm /etc/knockd.conf /etc/default/knockd
 	fi
 
 else
