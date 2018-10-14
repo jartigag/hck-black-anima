@@ -2,7 +2,11 @@
 # -*- coding: utf-8 -*-
 # basic ssh "pentest"
 #
-# usage: bash s.sh -h HOST [-u USER] [-p PORT] [ -k[g] / -b / -n ]
+# usage: bash s.sh -h HOST [-u USER] [-p PORT] [ -k[g] / -b / -n / -s]
+
+#TODO list:
+# - check if something is installed
+# - secure with this measures: https://www.raspberrypi.org/documentation/configuration/security.md
 
 # from: https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/top-20-common-SSH-passwords.txt
 passwords=(
@@ -12,15 +16,16 @@ letmein logon Passw@rd
 )
 
 while getopts h:u:p:kgbn opt #to make getopts expect an argument for an option,
-do                         #place ':' after the proper option flag.
+do                           #place ':' after the proper option flag.
 	case $opt in
 		h)host=$OPTARG;;
 		u)user=$OPTARG;;
 		p)port=$OPTARG;;
-		k)publickey=1;;  # config authentication with public key
-		g)genNewKey=1;;  # generate a new keys pair
-		b)bruteforce=1;; # bruteforce login with top20 common passwds
+		k)publickey=1;;    # config authentication with public key
+		g)genNewKey=1;;    # generate a new keys pair
+		b)bruteforce=1;;   # bruteforce login with top20 common passwds
 		n)portKnocking=1;; # protect ssh port through a pkgs sequence
+		s)securing=1;;	   # secure a machine through a few basic measures (#TODO) 
 	esac
 done
 
@@ -40,10 +45,10 @@ then
 
 	if [[ $bruteforce ]]
 	then
-		#TODO: check if sshpass is installed
-		# echo 'sshpass must be installed for bruteforcing ssh login.'
-		# echo -e '$ sudo apt install sshpass\n'
-		# sudo apt-get install sshpass
+		#TODO: check if `sshpass` is installed
+		# $ echo 'sshpass must be installed for bruteforcing ssh login.'
+		# $ echo -e '$ sudo apt install sshpass\n'
+		# $ sudo apt-get install sshpass
 
 		echo 'bruteforcing ssh login for user $user with top20 common passwds..'
 		for passwd in ${passwords[*]}
@@ -70,10 +75,10 @@ then
 
 	if [[ $portKnocking ]]
 	then
-		#TODO: check if iptables is installed
-		# echo 'iptables must be installed for portknocking.'
-		# echo -e '$ sudo apt install iptables\n'
-		# sudo apt-get install iptables
+		#TODO: check if `iptables` is installed
+		# $ echo 'iptables must be installed for portknocking.'
+		# $ echo -e '$ sudo apt install iptables\n'
+		# $ sudo apt-get install iptables
 
 		echo 'configuring iptables..'
 		sudo iptables -P INPUT ACCEPT
@@ -84,10 +89,10 @@ then
 		sudo iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
 		sudo iptables -A INPUT -j DROP
 
-		#TODO: check if knockd is installed
-		# echo 'knockd must be installed for portknocking.'
-		# echo -e '$ sudo apt install knockd\n'
-		# sudo apt-get install knockd
+		#TODO: check if `knockd` is installed
+		# $ echo 'knockd must be installed for portknocking.'
+		# $ echo -e '$ sudo apt install knockd\n'
+		# $ sudo apt-get install knockd
 
 		echo 'configuring /etc/knockd.conf and /etc/default/knockd files..'
 		echo "
@@ -107,10 +112,17 @@ then
 		echo 'now you must send packets to the sequence ports before ssh login'
 		echo 'e.g.: nc $host 7000; nc $host 8000; nc $host 9000; ssh $user@$host -p $port'
 		# clear all:
-		# sudo iptables -F
-		# sudo rm /etc/knockd.conf /etc/default/knockd
+		# $ sudo iptables -F
+		# $ sudo rm /etc/knockd.conf /etc/default/knockd
 	fi
 
 else
 	echo "required: -h hostIP"
+	echo "usage: bash s.sh -h HOST [-u USER] [-p PORT] [ -k[g] / -b / -n / -s]"
+	echo "options:"
+	echo "-k: config authentication with public key.
+-kg: generate a new keys pair.
+-b: bruteforce login with top20 common passwds.
+-n: portknocking (protect ssh port through a pkgs sequence).
+-s: secure a machine through a few basic measures."
 fi
