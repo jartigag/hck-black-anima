@@ -5,7 +5,6 @@
 # usage: bash s.sh -h HOST [-u USER] [-p PORT] [ -k[g] / -b / -n / -s]
 
 #TODO list:
-# - check if something is installed
 # - secure with this measures: https://www.raspberrypi.org/documentation/configuration/security.md
 
 # from: https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/top-20-common-SSH-passwords.txt
@@ -15,7 +14,7 @@ root toor raspberry test uploader password admin administrator marketing
 letmein logon Passw@rd
 )
 
-while getopts h:u:p:kgbn opt #to make getopts expect an argument for an option,
+while getopts h:u:p:kgbns opt #to make getopts expect an argument for an option,
 do                           #place ':' after the proper option flag.
 	case $opt in
 		h)host=$OPTARG;;
@@ -29,72 +28,29 @@ do                           #place ':' after the proper option flag.
 	esac
 done
 
-if [[ -n $host ]] #if $host is non-empty
-then
+function bruteforce_ssh {
+	echo 'bruteforcing ssh login for user $user with top20 common passwds..'
+	for passwd in ${passwords[*]}
+	do
+		echo -e "\n$ sshpass -p $passwd ssh -p $port $user@$host"
+		sshpass -p $passwd ssh -p $port $user@$host
+		#TODO: stop if it logs in
+	done
+}
 
-	if [[ -z $user ]] #if $user is empty,
-	then
-		user="root" #default user
-	fi
-	if [[ -z $port ]] #if $port is empty,
-	then
-		port="22" #default port
-	fi
+function configure_iptables {
+	echo 'configuring iptables..'
+	sudo iptables -P INPUT ACCEPT
+	sudo iptables -P FORWARD ACCEPT
+	sudo iptables -P OUTPUT ACCEPT
+	sudo iptables -A INPUT -i lo -j ACCEPT
+	sudo iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+	sudo iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+	sudo iptables -A INPUT -j DROP
+}
 
-	echo -e " USER=$user\n HOST=$host\n PORT=$port\n"
-
-	if [[ $bruteforce ]]
-	then
-		#TODO: check if `sshpass` is installed
-		# $ echo 'sshpass must be installed for bruteforcing ssh login.'
-		# $ echo -e '$ sudo apt install sshpass\n'
-		# $ sudo apt-get install sshpass
-
-		echo 'bruteforcing ssh login for user $user with top20 common passwds..'
-		for passwd in ${passwords[*]}
-		do
-			echo -e "\n$ sshpass -p $passwd ssh -p $port $user@$host"
-			sshpass -p $passwd ssh -p $port $user@$host
-			#TODO: stop if it logs in
-		done
-	fi
-
-	if [[ $publickey ]]
-	then
-		if [[ $genNewKey ]]
-		then
-			echo 'generating a public and private key pair..'
-			echo -e '$ ssh-keygen -t rsa\n'
-			ssh-keygen -t rsa
-		fi
-
-		echo 'configuring ssh authentication with public key for user $user..'
-		echo -e '$ cat ~/.ssh/id_rsa.pub | ssh $user@$host -p $port "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"\n'
-		cat ~/.ssh/id_rsa.pub | ssh $user@$host -p $port "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
-	fi
-
-	if [[ $portKnocking ]]
-	then
-		#TODO: check if `iptables` is installed
-		# $ echo 'iptables must be installed for portknocking.'
-		# $ echo -e '$ sudo apt install iptables\n'
-		# $ sudo apt-get install iptables
-
-		echo 'configuring iptables..'
-		sudo iptables -P INPUT ACCEPT
-		sudo iptables -P FORWARD ACCEPT
-		sudo iptables -P OUTPUT ACCEPT
-		sudo iptables -A INPUT -i lo -j ACCEPT
-		sudo iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
-		sudo iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
-		sudo iptables -A INPUT -j DROP
-
-		#TODO: check if `knockd` is installed
-		# $ echo 'knockd must be installed for portknocking.'
-		# $ echo -e '$ sudo apt install knockd\n'
-		# $ sudo apt-get install knockd
-
-		echo 'configuring /etc/knockd.conf and /etc/default/knockd files..'
+function configure_knockd {
+	echo 'configuring /etc/knockd.conf and /etc/default/knockd files..'
 		echo "
 [options]
     UseSyslog
@@ -114,6 +70,72 @@ then
 		# clear all:
 		# $ sudo iptables -F
 		# $ sudo rm /etc/knockd.conf /etc/default/knockd
+}
+
+if [[ -n $host ]] #if $host is non-empty
+then
+
+	if [[ -z $user ]] #if $user is empty,
+	then
+		user="root" #default user
+	fi
+	if [[ -z $port ]] #if $port is empty,
+	then
+		port="22" #default port
+	fi
+
+	echo -e " USER=$user\n HOST=$host\n PORT=$port\n"
+
+	if [[ $bruteforce ]]
+	then
+		if hash sshpass 2>/dev/null; then # if sshpass is installed:
+			bruteforce_ssh
+		else
+			echo 'sshpass must be installed for bruteforcing ssh login.'
+			echo -e '$ sudo apt-get install sshpass\n'
+			sudo apt-get install sshpass
+			bruteforce_ssh
+		fi
+	fi
+
+	if [[ $publickey ]]
+	then
+		if [[ $genNewKey ]]
+		then
+			echo 'generating a public and private key pair..'
+			echo -e '$ ssh-keygen -t rsa\n'
+			ssh-keygen -t rsa
+		fi
+
+		echo 'configuring ssh authentication with public key for user $user..'
+		echo -e '$ cat ~/.ssh/id_rsa.pub | ssh $user@$host -p $port "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"\n'
+		cat ~/.ssh/id_rsa.pub | ssh $user@$host -p $port "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+	fi
+
+	if [[ $portKnocking ]]
+	then
+		if hash iptables 2>/dev/null; then # if iptables is installed:
+			configure_iptables
+		else
+			echo 'iptables must be installed for portknocking.'
+			echo -e '$ sudo apt-get install iptables\n'
+			sudo apt-get install iptables
+			configure_iptables
+		fi
+
+		if hash knockd 2>/dev/null; then # if knockd is installed:
+			configure_iptables
+		else
+			echo 'knockd must be installed for portknocking.'
+			echo -e '$ sudo apt-get install knockd\n'
+			sudo apt-get install knockd
+			configure_knockd
+		fi
+	fi
+
+	if [[ $securing ]]
+	then
+		echo "#TODO: securing"
 	fi
 
 else
