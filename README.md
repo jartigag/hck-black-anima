@@ -1,6 +1,6 @@
 # hck-black-anima
 
-Repositorio para la asignatura "[Seguridad en Redes y Servicios](https://www.unavarra.es/ficha-asignaturaDOA/?languageId=100000&codPlan=243&codAsig=243707&anio=2018)
+Repositorio para la asignatura "[Seguridad en Redes y Servicios](https://www.unavarra.es/ficha-asignaturaDOA/?languageId=100000&codPlan=243&codAsig=243707&anio=2018)"
 
 1. Criptografía  
   - [practicaClay](https://github.com/jartigag/hck-black-anima/tree/master/practicaClay)
@@ -17,4 +17,4 @@ Repositorio para la asignatura "[Seguridad en Redes y Servicios](https://www.una
 
 6. Instrusión en sistemas. Buffer Overflow, Format Strings (Metasploit). Elevación de privilegios
 
-7. Hacking web. Robo de sesión. SQLinjection, XXS, Race condictions
+7. Hacking web. Robo de sesión. SQLinjection, XXS, condiciones de carrera
