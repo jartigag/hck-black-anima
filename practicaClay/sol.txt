@@ -1,0 +1,188 @@
+
+############
+## PARTE1 ##
+############
+
+srs03@tlm122:~$ cat enunciadoparte1.txt | openssl enc -base64 -d
+Para descifrar el siguiente ejercicio se utilizara el algoritmo DES. Como clave se usara el hash MD5 de la palabra f6b5f8.
+
+srs03@tlm122:~$ echo -n "f6b5f8" | openssl dgst -md5
+(stdin)= eb88b1d5a43ba365389475a938bcf766
+
+############
+## PARTE2 ##
+############
+
+srs03@tlm122:~$ cat enunciadoparte2.txt | openssl enc -base64 -d | openssl enc -des -d
+enter des-cbc decryption password:
+Para descifrar el siguiente ejercicio se utilizara el algoritmo AES128 y como clave el sha1 de la palabra fac20e.
+
+############
+## PARTE3 ##
+############
+
+srs03@tlm122:~$ echo -n "fac20e" | openssl dgst -sha1
+(stdin)= ecae7775c1908b9e301d7e567988a9eb8fc2ee26
+
+srs03@tlm122:~$ cat enunciadoparte3.txt | openssl enc -base64 -d | openssl enc -aes128 -d
+enter aes-128-cbc decryption password:
+Para descifrar el siguiente ejercicio sera necerario usar claves publicas y privadas para obtener la clave simetrica. Se utilizara como clave publica:
+-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9J3v/w5NPuoaqTg6KX18Go4Y8
+1wiBiOKaQGU7eZWBJA5io+5IYv32iH2+kLGz6I27kzZcgPcwrnLxgrr4sG+iKVvu
+IvyusoK/zgUib0v4FbV0PEqT/kt5jMu2KR3jAHaIbH5n+cCLT+zaRDt9ZRIfHmvF
+mNbD2+vHDKv5pxOFMwIDAQAB
+-----END PUBLIC KEY-----
+ y como clave privada: 
+-----BEGIN RSA PRIVATE KEY-----
+MIICXQIBAAKBgQC9J3v/w5NPuoaqTg6KX18Go4Y81wiBiOKaQGU7eZWBJA5io+5I
+Yv32iH2+kLGz6I27kzZcgPcwrnLxgrr4sG+iKVvuIvyusoK/zgUib0v4FbV0PEqT
+/kt5jMu2KR3jAHaIbH5n+cCLT+zaRDt9ZRIfHmvFmNbD2+vHDKv5pxOFMwIDAQAB
+AoGAc/lfh6NsELg2lPii5agv5Swhw++74WACP7031E1povJud4A3Ot6nA58QKeUh
+b0Mok1dhPzo7VPfAtd8HsC7NYjuEev/8hSTR/MOfcQZA4Gx/WT5EM2UwpY1WI02M
+7m7MSrJgznjVsneow+Cx1REeEUe7omQKKs3TOlfRdWqckZECQQDmcK/hlY/ty6zF
+hzEXXAmkh3DmfEXR4yipb7p0srLjYGxmtAq+vHLncJOEy3tRUzwv5Wv2l0urjXj/
+bmwapMVFAkEA0iJ9QwYr8qfZq8rcupYsGtDVDwCC1xLqCNxudh8XuiPStqcnDcFY
+Jdl8ufkZ34jLRWTjh7Cjhkzl8VYwKW1cFwJAQxQITo0fwWOpXjJVOuyCrg7y8VS5
+ajhKjM/GIdQmuINH6rl76zul4vLlLiGhOvIUsgiBXd16nGxpDUmSVEskVQJBALGL
+nISd2VIcSgkhzSAFtFwv6GTVjLdF7uHvxZEeMkD+9ZGIZ7Hyk5TfTsgfVaIOBZmr
+ZaeHMpNNs9cWeHj4Qp8CQQCzvBpNF/D3tZv4H9Y/UqFRmGQ6OvW9JV2asi9aQqtQ
+nmFhKHfWT7D8Bhi0xa5BD6hroTK6315g2lzYOW/qn9ag
+-----END RSA PRIVATE KEY-----
+Se ha cifrado la clave simetrica usando una de dichas claves, es evidente cual se ha utilizado:
+nlJyMtZpPvAZvhIseO5BJAt2F7nMQQZ8nQoGmkPD/ejqAiFKSLQQB9mvXtuK3Hl6
+KLoLoeHk6nZxnvNRZNh0zA3XtHx4LzCzli9ml/oD0g4sNVuxfOWB/s6hscbgn9qc
+C0ZgJPj8nqYZ98MJBfqlgn6TjF71agTOd5V4xU84suU=
+Para cifrar el ejercicio se ha utilizando como algoritmo DES.
+
+srs03@tlm122:~$ echo "-----BEGIN PUBLIC KEY-----
+> MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9J3v/w5NPuoaqTg6KX18Go4Y8
+> 1wiBiOKaQGU7eZWBJA5io+5IYv32iH2+kLGz6I27kzZcgPcwrnLxgrr4sG+iKVvu
+> IvyusoK/zgUib0v4FbV0PEqT/kt5jMu2KR3jAHaIbH5n+cCLT+zaRDt9ZRIfHmvF
+> mNbD2+vHDKv5pxOFMwIDAQAB
+> -----END PUBLIC KEY-----
+> " >> key.pub
+
+srs03@tlm122:~$ echo "-----BEGIN RSA PRIVATE KEY-----
+> MIICXQIBAAKBgQC9J3v/w5NPuoaqTg6KX18Go4Y81wiBiOKaQGU7eZWBJA5io+5I
+> Yv32iH2+kLGz6I27kzZcgPcwrnLxgrr4sG+iKVvuIvyusoK/zgUib0v4FbV0PEqT
+> /kt5jMu2KR3jAHaIbH5n+cCLT+zaRDt9ZRIfHmvFmNbD2+vHDKv5pxOFMwIDAQAB
+> AoGAc/lfh6NsELg2lPii5agv5Swhw++74WACP7031E1povJud4A3Ot6nA58QKeUh
+> b0Mok1dhPzo7VPfAtd8HsC7NYjuEev/8hSTR/MOfcQZA4Gx/WT5EM2UwpY1WI02M
+> 7m7MSrJgznjVsneow+Cx1REeEUe7omQKKs3TOlfRdWqckZECQQDmcK/hlY/ty6zF
+> hzEXXAmkh3DmfEXR4yipb7p0srLjYGxmtAq+vHLncJOEy3tRUzwv5Wv2l0urjXj/
+> bmwapMVFAkEA0iJ9QwYr8qfZq8rcupYsGtDVDwCC1xLqCNxudh8XuiPStqcnDcFY
+> Jdl8ufkZ34jLRWTjh7Cjhkzl8VYwKW1cFwJAQxQITo0fwWOpXjJVOuyCrg7y8VS5
+> ajhKjM/GIdQmuINH6rl76zul4vLlLiGhOvIUsgiBXd16nGxpDUmSVEskVQJBALGL
+> nISd2VIcSgkhzSAFtFwv6GTVjLdF7uHvxZEeMkD+9ZGIZ7Hyk5TfTsgfVaIOBZmr
+> ZaeHMpNNs9cWeHj4Qp8CQQCzvBpNF/D3tZv4H9Y/UqFRmGQ6OvW9JV2asi9aQqtQ
+> nmFhKHfWT7D8Bhi0xa5BD6hroTK6315g2lzYOW/qn9ag
+> -----END RSA PRIVATE KEY-----" >> key.pvt
+
+srs03@tlm122:~$ echo "nlJyMtZpPvAZvhIseO5BJAt2F7nMQQZ8nQoGmkPD/ejqAiFKSLQQB9mvXtuK3Hl6
+KLoLoeHk6nZxnvNRZNh0zA3XtHx4LzCzli9ml/oD0g4sNVuxfOWB/s6hscbgn9qc
+C0ZgJPj8nqYZ98MJBfqlgn6TjF71agTOd5V4xU84suU=" >> passwd-parte3-cif.txt
+
+srs03@tlm122:~$ cat parte3cifrada.txt | openssl enc -base64 -d >> passwd-parte3-descif64.txt
+
+srs03@tlm122:~$ openssl rsautl -decrypt -inkey key.pvt -in passwd-parte3-descif64.txt
+1c336b
+
+############
+## PARTE4 ##
+############
+
+srs03@tlm122:~$ cat enunciadoparte4.txt | openssl enc -base64 -d | openssl enc -des -d
+enter des-cbc decryption password:
+En el siguiente ejercicio se ha realizado la firma de varios ficheros file1, file2, ... file6 que se encuentran en el servidor web. Hay que verificar si se han firmado con las claves publica y privada de la parte anterior o si se han firmado utilisando las siguientes claves. Clave publica:
+-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDFAI4MhsasfnYMPfGggB3yO1N1
+5vUiHrCU5PIRDPgaoeJMt3z3Cj4aGwhU96mb8cV9gPzIAy6KjFpV2gpMAI1FlSAx
+RWbXnGS5NIG/NaQfKOYfNT7ed/KlH8cd1lsMadL5Ef8Vj+fc9kHJj0PsBp/Z4V5y
+idGELBTk20qU/tAVoQIDAQAB
+-----END PUBLIC KEY-----
+, clave privada:
+-----BEGIN RSA PRIVATE KEY-----
+MIICXQIBAAKBgQDFAI4MhsasfnYMPfGggB3yO1N15vUiHrCU5PIRDPgaoeJMt3z3
+Cj4aGwhU96mb8cV9gPzIAy6KjFpV2gpMAI1FlSAxRWbXnGS5NIG/NaQfKOYfNT7e
+d/KlH8cd1lsMadL5Ef8Vj+fc9kHJj0PsBp/Z4V5yidGELBTk20qU/tAVoQIDAQAB
+AoGAKEn7ww4RNZfLVqeYceWhujdt0y//tBGotVq5Msl/OBshZ+UitncuyjH7Gz1n
+P5BLfmZRzCnya71WgDZOYsq+GT+1rHIoANDz1FZL1O+lbdeUUTKWiO76lxa+VrQF
+puyeukZqipxFllZ8n7eNt50XMB2k7cuPA2UP7qDpAG4LMZ0CQQD1ZHsfMfwZWWSm
+j7C26HtR3FDUUfVF24Wgytnm/MwN3b6JTqaGtKGyPYi+O6QWOrPFyQECYA12Ry5n
+JXDW4B2TAkEAzYSV2qMzKd9HmiW33dNt9Uo8Q43vTERGTSAvL3FLmqHgm4GjQmup
+NH0nUHrNeOORs8+/fJ3303qh+zWs7oKgewJBALs1kzCzY467QixIBxsjtaE4IXo5
+pJNM7F9FIoQ0bEBP4WLDXAv8ljdy9nWa7o3+7tN/i4OSX/LSTzZlu/ZSOH0CQHZc
+lbGFrEHBRguRDYPD8OAEEREW/Wp/J73je0lnhpNYB3OIBe6K8rg4HBxNnWiyJ4fX
+bgDnOYOibQewshfrQ2ECQQCSc4xXkxq2AifJiPo0zUHDEzZqpcHVvu38cGhiXytr
+roIMKQBZwo+f9uRpXmfUrVd0JzB4HDES7XvmSHTnT4MO
+-----END RSA PRIVATE KEY-----
+Las firmas resultantes han sido cifradas utilizando el mismo proceso que en el anterior ejercicio pero usando la clave publica de este ejercicio. Tras cifrarla, la clave es:
+DRZ3J7MxDmitiQG1w9C13s9QYoVqwHTG27SwuskpKcLZOdIMJprq/M1w3j5fcuaZ
++PgvOUX5cIDw4Q8wN2ERKKrXIm/F43gHbxebyX1DSUX5xpuXzT0Wb57wB2BKYthk
+bmmy3UEkvmRUril12IOCuy1X79AyfwWKTvNyGix9Nd4=
+
+srs03@tlm122:~$ echo "DRZ3J7MxDmitiQG1w9C13s9QYoVqwHTG27SwuskpKcLZOdIMJprq/M1w3j5fcuaZ
+> +PgvOUX5cIDw4Q8wN2ERKKrXIm/F43gHbxebyX1DSUX5xpuXzT0Wb57wB2BKYthk
+> bmmy3UEkvmRUril12IOCuy1X79AyfwWKTvNyGix9Nd4=" | openssl enc -base64 -d >> password-parte4descif64.txt
+
+srs03@tlm122:~$ openssl rsautl -decrypt -inkey key-parte4.pvt -in password-parte4descif64.txt 
+87c169
+
+############
+## PARTE5 ##
+############
+
+##Firmas para el ejercicio mediante sha256:
+
+srs03@tlm122:~$ cat enunciadoparte5.txt | openssl enc -base64 -d | openssl enc -des -d
+enter des-cbc decryption password:
+La firma del fichero 1, file1 es:
+hrNOVliJlosCj1B+HbsIYeprjxg9KZUyG6Gs9vGMOTyEcTrUxq6qwZJQCb4tbq6N
+beAio1hXpTXUVELtcKeJquqUkJ+/fNe8dOdv03apr55KuXI2hgFFVEkJxSDF0X6m
+ZIm+CHQIODDY8DAwWblP+u5c/aXy45BPn4o8e4Zn0ik=
+La firma del fichero 2, file2 es:
+HU9XxG4EEYkRLhmZ0DG9KnwPRi8l5naTLffI7IpMOlGLPhpXD6TkT4MMpaxWhdht
+8deeCLx176y5+8j/YLESZ0Oq9F+7BLLiHpjdSlLHSTTcLvUSTXbnYTc3Z76245iu
+3dLqbKZmUEs21JNjzkhsiuaEoqbXqT6tk2JT8ceYQ/Q=
+La firma del fichero 3, file3 es:
+fGgzHUE7VY3+DtXIsT0CLwznj0+uE0+44sNKEZWgr6jsdwYTAgna7h7JLlXspyHi
+ymtVYd8EmQxD7Cj1hBqIrKvdRWOvOLfmJMHt00JL8rpqFHIqyH7oC8yKGYGDtFQF
+FGrVQwZ9855nkhJ+yXpUSueFudpB7XAYi6sgIdn8Puc=
+La firma del fichero 4,file4 es:
+AsQ+PwUZrxQ8Z3Ln/VtkREEPDAh0MNW449rJahPaJaS8xYEMlWIpwcF9cE19q+NG
+vTY/jg67X/552pcvnfP1Qog6J0iljEVAxMwYupbwyiBSiEPNJMA8p0Iq2q9IV2id
+vCooPb3zxHBBnDqHGyXCVvojut0EYi4SsaOzdljvijM=
+La firma del fichero 5, file5 es:
+tAQMtyttUHDsQ7xlUIFxpbRsGSFOj/+THaPbM0jBvB9W/KNU2EHcbqlvSX7k7aBv
+i+k5mHLoIv06l/BOV4qIj9ojiMcJb3CaGOjGWGBvT6TQzH0eJMdcUG5CIkmH5dcM
+oAwsBnVXFHQjAddObOvteQ4K4auPM4oDd0m1v43+BYg=
+La firma del fichero 6, file6 es:
+k64vFSb+6DBLuWw36v7tUljGRJ0jOhFdo6Ni6tRQDGo7Ons0XOU1NdmfY+RI6jHA
+bCL5Cm0Htlw9EI/Ijg1mfQY9cCltTN1vOWOJ89KteBWX8WTHU9PXUOtSyhufNe1H
+yzWrEN+aNo7yCwEzXr2sgJDsoC43SFP61R10XoGIPHE=
+La siguiente parte esta cifrada con blowfish. La clave para descifrarla es
+2638f6
+
+###
+SOLUCIÓN:
+Fichero	Clave
+1		2 (pub_keys/key-parte4.pub)
+2		1 (pub_keys/key-parte3.pub)
+3		1 (pub_keys/key-parte3.pub)
+4		1 (pub_keys/key-parte3.pub)
+5		2 (pub_keys/key-parte4.pub)
+6		2 (pub_keys/key-parte4.pub)
+###
+
+############
+## PARTE6 ##
+############
+
+srs03@tlm122:~$ cat enunciadoparte6.txt |  openssl enc -base64 -d |  openssl enc -blowfish -d
+enter bf-cbc decryption password:
+Bien hecho has llegado a la parte final, la password de tu usuario es:
+2e36742b377be90ffbf553692153d9a1 -
+Ahora deberas tomar otra vez el control del servidor y asegurarlo. Solo deberias poder entrar tu desde ssh y tener activos los puertos de http https. Es vuestro servidor y solo vuestro. Para ello deberas habilitar apache para que sirva paginas web mediante protocolo seguro con un certificado realizado por ti.
+Una vez hecho eso se debera poner en la pagina principal del puerto cifrado (la que funciona por https) la pagina original que tenias antes del hackeo, donde debera aparecer el nombre del usuario de practicas y el nombre y apellidos de cada uno de los componentes.
+En la pagina insegura http debera aparecer el texto en limpio de todas estas pruebas asi como a que fichero al que corresponde cada una de las firmas del ejercicio 5
