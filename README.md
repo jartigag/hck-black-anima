@@ -19,3 +19,5 @@ Repositorio para la asignatura "[Seguridad en Redes y Servicios](https://www.una
 6. Instrusión en sistemas. Buffer Overflow, Format Strings (Metasploit). Elevación de privilegios
 
 7. Hacking web. Robo de sesión. SQLinjection, XXS, condiciones de carrera
+
+8. Seguridad perimetral. Firewalls
