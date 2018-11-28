@@ -21,6 +21,7 @@ Repositorio para la asignatura "[Seguridad en Redes y Servicios](https://www.una
 7. Hacking web. Robo de sesión. SQLinjection, XXS, condiciones de carrera
 
 8. Seguridad perimetral. Firewalls
+ - [iptables.txt](https://github.com/jartigag/hck-black-anima/blob/master/iptables.txt)
 
 9. Malware
 
