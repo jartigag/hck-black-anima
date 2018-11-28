@@ -21,7 +21,7 @@
 -A OUTPUT -p tcp -m tcp --sport 80 -j ACCEPT                              # 5o.
 -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT                              # 6i. Allow HTTPS requests to server.
 -A OUTPUT -p tcp -m tcp --sport 443 -j ACCEPT                             # 6o.
--A OUTPUT -p tcp -m tcp --sport 22 -j DROP --tcp-flags SYN,ACK SYN        # 7i. Ban any other connection to server initiated from outside.
+-A OUTPUT -p tcp -m tcp -j DROP --tcp-flags SYN,ACK SYN                   # 7i. Ban any other connection to server initiated from outside.
 -A OUTPUT -s ${ipServer}/32 -p tcp -m state --state NEW -j ACCEPT         # 8a. Allow any other connection
 -A INPUT -d ${ipServer}/32 -p tcp -m state --state ESTABLISHED -j ACCEPT  # 8b. not explicitely banned
 -A OUTPUT -s ${ipServer}/32 -p tcp -m state --state ESTABLISHED -j ACCEPT # 8c. below.
