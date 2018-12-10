@@ -31,8 +31,8 @@ Repositorio para la asignatura "[Seguridad en Redes y Servicios](https://www.una
 
 ### proyecto final
 
-**Cautive**: Ejemplo de *Rogue Access Point* y MitM en la red Wi-Fi de la UPNA  
-[[presentación](https://jartigag.xyz/cautive/)] y [[repositorio](https://github.com/jartigag/cautive)]
+**Captive**: Ejemplo de *Rogue Access Point* y "MitM" en la red Wi-Fi de la UPNA  
+[[presentación](https://jartigag.xyz/captive/)] y [[repositorio](https://github.com/jartigag/captive)]
 
 ### htb
 <img src="https://www.hackthebox.eu/badge/image/84928" alt="Hack The Box">
