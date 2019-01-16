@@ -18,7 +18,7 @@ Repositorio para la asignatura "[Seguridad en Redes y Servicios](https://www.una
 
 6. Instrusión en sistemas. Buffer Overflow, Format Strings (Metasploit). Elevación de privilegios
 
-7. Hacking web. Robo de sesión. SQLinjection, XXS, condiciones de carrera
+7. Hacking web. Robo de sesión. SQLinjection, XSS, condiciones de carrera
 
 8. Seguridad perimetral. Firewalls
  - [iptables.txt](https://github.com/jartigag/hck-black-anima/blob/master/iptables.txt)
@@ -26,6 +26,10 @@ Repositorio para la asignatura "[Seguridad en Redes y Servicios](https://www.una
 9. Malware
 
 10. Ingeniería Social
+ - [Truco de ingeniería social con un bebé llorando y una llamada](https://youtu.be/lc7scxvKQOo)
+ - [Ingeniería social en [un banco / un hotel]](https://holename.wordpress.com/tag/ingenieria-social/)
+ - [El arte de la adivinación](https://youtu.be/F7pYHN9iC9I)
+ - [INCIBE: Kit de concienciación para empresas](https://www.incibe.es/protege-tu-empresa/kit-concienciacion)
 
 11. Monitorización
 
